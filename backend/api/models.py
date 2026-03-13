@@ -1,3 +1,14 @@
 from django.db import models
 
-# Create your models here.
+
+class Beach(models.Model):
+    name = models.CharField(max_length=200)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    city = models.CharField(max_length=100)
+    state = models.CharField(max_length=100)
+    water_quality = models.CharField(max_length=50, default="Unknown")
+    crowd_density = models.CharField(max_length=50, default="Unknown")
+
+    def __str__(self):
+        return self.name
