@@ -105,3 +105,31 @@ Frontend runs at `http://localhost:3000/`.
 - `GET /api/beach/<id>/`
 - `GET /api/weather/?lat=<lat>&lon=<lon>`
 - `GET /api/nearest-beaches/?lat=<lat>&lon=<lon>`
+
+## Add All India Beaches To Atlas
+Atlas reads from the backend `Beach` table through `GET /api/beaches/`.
+
+To bulk add beaches:
+
+1. Prepare a CSV using this header:
+
+```csv
+name,city,state,latitude,longitude,water_quality,crowd_density
+```
+
+Use [`backend/data/india_beaches.sample.csv`](/home/manish/Documents/project/eco-shore/backend/data/india_beaches.sample.csv) as template.
+
+2. Run import command:
+
+```bash
+cd backend
+source myenv/bin/activate
+python manage.py import_india_beaches --file data/india_beaches.sample.csv
+```
+
+3. Restart backend and refresh frontend Atlas page.
+
+Notes:
+- Required columns: `name, city, state, latitude, longitude`
+- Optional columns: `water_quality, crowd_density` (defaults to `Unknown`)
+- Re-running import updates existing rows (same `name + city + state`) instead of duplicating.
