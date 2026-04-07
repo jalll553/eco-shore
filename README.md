@@ -81,6 +81,8 @@ python manage.py runserver
 
 Backend runs at `http://127.0.0.1:8000/`.
 
+`python manage.py migrate` now auto-seeds mock beach data so Atlas, Forecast, Nearby, and Pulse pages are not empty on first run.
+
 ## Frontend Setup and Run
 In a new terminal, from project root:
 
@@ -99,6 +101,8 @@ Frontend runs at `http://localhost:3000/`.
   - run `npm install` inside `frontend/`.
 - `No module named 'django'`:
   - activate backend virtualenv before running `manage.py`.
+- Weather API temporarily unavailable:
+  - backend now returns realistic mock weather fallback so Forecast UI still shows populated values.
 
 ## API Routes
 - `GET /api/beaches/`
