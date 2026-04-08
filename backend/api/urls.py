@@ -1,9 +1,10 @@
 from django.urls import path
-from .views import get_weather, get_beaches, get_beach_detail, nearest_beaches
+from . import views
 
 urlpatterns = [
-    path('weather/', get_weather),
-    path('beaches/', get_beaches),
-    path("beach/<int:id>/", get_beach_detail),
-    path("nearest-beaches/", nearest_beaches),
+    path('weather/', views.get_weather, name='get_weather'),
+    path('beaches/', views.get_beaches, name='get_beaches'),
+    path('beaches/<int:id>/', views.get_beach_detail, name='get_beach_detail'),
+    path('beaches/nearest/', views.nearest_beaches, name='nearest_beaches'),
+    path('contact/', views.submit_contact, name='submit_contact'),
 ]

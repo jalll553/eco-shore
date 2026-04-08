@@ -1,34 +1,42 @@
+import { useEffect, useRef } from 'react';
 import {
-  buildMapUrl,
-  formatLabel,
   formatNumber,
-  formatObservationTime,
-  getWeatherDescription,
 } from '../lib/ecoshore';
 
 function HomePage({
   beaches,
-  nearestBeaches,
-  onLocateMe,
-  pageLinks,
-  selectedBeach,
   userLocation,
-  weather,
   navigate,
 }) {
-  const statesCovered = new Set(beaches.map((beach) => beach.state).filter(Boolean)).size;
-  const weatherDetails = weather?.current_weather;
-  const previewPages = pageLinks.filter((page) => page.path !== '/');
-  const nearestPreview = nearestBeaches[0];
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      const playPromise = videoRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          if (error.name === 'AbortError') {
+            // It's safe to ignore this error when component unmounts
+            console.log('Video playback aborted during navigation.');
+          }
+        });
+      }
+    }
+  }, []);
 
   return (
     <div className="w-full">
       {/* Hero Section with Video Background */}
       <section className="relative min-h-[calc(100vh-4rem)] flex items-center justify-center overflow-hidden">
         {/* Video Background */}
-        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover">
-          <source src="https://player.vimeo.com/external/370467553.sd.mp4?s=e90dcaba73c19e0e36f03406b47bbd6a92d6e9a6&profile_id=139&oauth2_token_id=57447761" type="video/mp4" />
-        </video>
+        <video 
+          ref={videoRef}
+          src="https://player.vimeo.com/external/370467553.sd.mp4?s=e90dcaba73c19e0e36f03406b47bbd6a92d6e9a6&profile_id=139&oauth2_token_id=57447761"
+          muted 
+          loop 
+          playsInline 
+          className="absolute inset-0 w-full h-full object-cover"
+        />
         
         {/* Overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-ocean-blue/80 via-turquoise/70 to-transparent"></div>

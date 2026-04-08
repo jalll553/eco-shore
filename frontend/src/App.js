@@ -7,6 +7,8 @@ import ConditionsPage from './pages/ConditionsPage';
 import HomePage from './pages/HomePage';
 import NearbyPage from './pages/NearbyPage';
 import PulsePage from './pages/PulsePage';
+import FeaturesPage from './pages/FeaturesPage';
+import ContactPage from './pages/ContactPage';
 
 function readRoute() {
   if (typeof window === 'undefined') {
@@ -160,6 +162,22 @@ function App() {
         navigate={navigate}
         selectedBeach={selectedBeach}
       />
+    );
+  }
+
+  if (route === '/features') {
+    pageContent = (
+      <FeaturesPage
+        beaches={beaches}
+        weather={weather}
+        navigate={navigate}
+      />
+    );
+  }
+
+  if (route === '/contact') {
+    pageContent = (
+      <ContactPage />
     );
   }
 

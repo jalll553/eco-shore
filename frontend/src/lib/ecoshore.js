@@ -39,6 +39,14 @@ export const pageLinks = [
     preview: 'Let the browser point you toward nearby shorelines and turn proximity into the main story.',
   },
   {
+    path: '/features',
+    label: 'Features',
+    title: 'Platform Features',
+    eyebrow: 'Explore capabilities',
+    description: 'Dive deeper into what Ecoshore provides, from live safety alerts to dynamic analytics.',
+    preview: 'Learn about smart search, real-time weather integration, and active community insight.',
+  },
+  {
     path: '/pulse',
     label: 'Pulse',
     title: 'Tide Pulse',
@@ -46,6 +54,15 @@ export const pageLinks = [
     description: 'A calmer analytical page that turns the backend dataset into beach quality, crowd, and region signals.',
     preview: 'Read the current beach inventory like a coastal bulletin instead of another list.',
   },
+  {
+    path: '/contact',
+    label: 'Contact',
+    title: 'Get in Touch',
+    eyebrow: 'Reach out',
+    description: 'Contact our team for inquiries, support, or partnership opportunities.',
+    preview: 'Send us a message directly from the platform.',
+  },
+
 ];
 
 const validRouteSet = new Set(pageLinks.map((page) => page.path));
