@@ -129,3 +129,12 @@ def nearest_beaches(request):
     beach_distances.sort(key=lambda x: x["distance_km"])
 
     return Response(beach_distances[:5])
+
+@api_view(["POST"])
+def submit_contact(request):
+    from .serializers import ContactMessageSerializer
+    serializer = ContactMessageSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"status": "Success"}, status=201)
+    return Response(serializer.errors, status=400)
