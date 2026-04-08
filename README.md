@@ -1,131 +1,139 @@
-🌊 Ecoshore — Smart Coastal Information Platform
-📌 Overview
+# Ecoshore
 
-Ecoshore is a web platform designed to help users explore beaches and access important coastal information in one place. The platform provides real-time weather updates, beach location discovery, and navigation assistance using map services.
+Ecoshore is a beach information platform with:
+- a Django + PostgreSQL backend API
+- a React frontend
+- live weather lookup (Open-Meteo)
+- nearby beach search
 
-Instead of handling complex services like booking systems or payment gateways internally, Ecoshore redirects users to trusted third-party platforms. This approach keeps the platform lightweight, fast, and focused on providing useful beach information.
+## Tech Stack
+- Backend: Django, Django REST Framework, PostgreSQL
+- Frontend: React (`react-scripts`)
+- APIs: Open-Meteo, Google Maps links
 
-The goal of Ecoshore is to make beach trips safer, easier to plan, and more enjoyable.
+## Project Structure
+- `backend/` Django project
+- `frontend/` React app
+- `requirements.txt` Python dependencies (at repo root)
 
-🚀 Features
-🌍 Beach Location Discovery
+## Prerequisites
+- Python 3.10+
+- Node.js 20 LTS recommended
+- PostgreSQL 14+
 
-Search and explore nearby beaches.
+## Backend Setup
+From the project root:
 
-View beach locations using interactive maps.
-
-Navigate directly to beach locations.
-
-🌦 Real-Time Weather Information
-
-Displays live weather conditions for beach areas.
-
-Shows temperature, wind speed, and environmental conditions.
-
-Weather data fetched using external APIs.
-
-🗺 Interactive Maps
-
-Map API integration for displaying beach locations.
-
-Allows users to visualize beaches geographically.
-
-Provides directions and nearby location insights.
-
-🔗 External Service Redirection
-
-Instead of implementing complex internal systems, Ecoshore redirects users to trusted platforms for services such as:
-
-Hotel bookings
-
-Travel planning
-
-Event services
-
-This simplifies the system while ensuring users still get access to required services.
-
-🌱 Environmental Awareness
-
-Ecoshore promotes eco-friendly practices and encourages users to maintain clean beaches and respect marine environments.
-
-❌ Features Not Included
-
-To keep the platform simple and focused, the following features are not included:
-
-User authentication or login
-
-Booking systems
-
-Payment gateways
-
-User account management
-
-Internal reservation systems
-
-All such services are handled by external trusted websites.
-
-🛠 Tech Stack
-Frontend
-
-React JS
-
-HTML
-
-CSS
-
-JavaScript
-
-React is used to build a fast, responsive, and modular user interface.
-
-Backend
-
-Django (Python)
-
-Django handles:
-
-API communication
-
-Data processing
-
-Integration with third-party APIs
-
-Database
-
-PostgreSQL
-
-PostgreSQL is used for storing application data such as beach information, environmental data, and location metadata.
-
-APIs
-
-Weather API
-
-Map API
-
-These APIs provide real-time environmental and geographical information.
-
-2️⃣ Setup Backend (Django)
-cd backend
+```bash
+python3 -m venv backend/myenv
+source backend/myenv/bin/activate
 pip install -r requirements.txt
+```
+
+Create backend env file:
+
+```bash
+cp backend/.env.example backend/.env
+```
+
+Edit `backend/.env` as needed:
+
+```env
+DJANGO_ENV=development
+SECRET_KEY=change-me
+DEBUG=true
+ALLOWED_HOSTS=localhost,127.0.0.1
+DB_NAME=ecoshore
+DB_USER=jal
+DB_PASSWORD=eco-shore123
+DB_HOST=localhost
+DB_PORT=5432
+CORS_ALLOWED_ORIGINS=http://localhost:3000
+```
+
+## PostgreSQL Setup
+Create DB user and database (once):
+
+```bash
+sudo -u postgres psql
+```
+
+```sql
+CREATE USER jal WITH PASSWORD 'eco-shore123';
+CREATE DATABASE ecoshore OWNER jal;
+\q
+```
+
+If user already exists, reset password:
+
+```sql
+ALTER USER jal WITH PASSWORD 'eco-shore123';
+```
+
+## Run Backend
+
+```bash
+cd backend
+source myenv/bin/activate
 python manage.py migrate
 python manage.py runserver
+```
 
-3️⃣ Setup Frontend (React)
+Backend runs at `http://127.0.0.1:8000/`.
+
+`python manage.py migrate` now auto-seeds mock beach data so Atlas, Forecast, Nearby, and Pulse pages are not empty on first run.
+
+## Frontend Setup and Run
+In a new terminal, from project root:
+
+```bash
 cd frontend
 npm install
 npm start
+```
 
-🌍 Future Improvements
+Frontend runs at `http://localhost:3000/`.
 
-Possible future enhancements include:
+## Common Issues
+- `password authentication failed for user "jal"`:
+  - PostgreSQL credentials do not match `backend/.env`.
+- `react-scripts: not found`:
+  - run `npm install` inside `frontend/`.
+- `No module named 'django'`:
+  - activate backend virtualenv before running `manage.py`.
+- Weather API temporarily unavailable:
+  - backend now returns realistic mock weather fallback so Forecast UI still shows populated values.
 
-AI-based beach recommendations
+## API Routes
+- `GET /api/beaches/`
+- `GET /api/beach/<id>/`
+- `GET /api/weather/?lat=<lat>&lon=<lon>`
+- `GET /api/nearest-beaches/?lat=<lat>&lon=<lon>`
 
-Crowd density prediction
+## Add All India Beaches To Atlas
+Atlas reads from the backend `Beach` table through `GET /api/beaches/`.
 
-Environmental monitoring
+To bulk add beaches:
 
-Beach safety alerts
+1. Prepare a CSV using this header:
 
-Multi-language support
+```csv
+name,city,state,latitude,longitude,water_quality,crowd_density
+```
 
-Mobile app version
+Use [`backend/data/india_beaches.sample.csv`](/home/manish/Documents/project/eco-shore/backend/data/india_beaches.sample.csv) as template.
+
+2. Run import command:
+
+```bash
+cd backend
+source myenv/bin/activate
+python manage.py import_india_beaches --file data/india_beaches.sample.csv
+```
+
+3. Restart backend and refresh frontend Atlas page.
+
+Notes:
+- Required columns: `name, city, state, latitude, longitude`
+- Optional columns: `water_quality, crowd_density` (defaults to `Unknown`)
+- Re-running import updates existing rows (same `name + city + state`) instead of duplicating.
